@@ -1,0 +1,47 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.0' // версия может отличаться, оставь свою
+    id 'jacoco'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = 'ru.netology'
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+test {
+    useJUnit()
+    finalizedBy jacocoTestReport // после тестов сразу генерировать отчёт
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'BRANCH'
+                minimum = 0.80
+            }
+        }
+    }
+}
+
+check {
+    dependsOn jacocoTestCoverageVerification
+}
